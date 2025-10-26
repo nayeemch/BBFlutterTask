@@ -63,9 +63,6 @@ This project follows **Clean Architecture** principles with clear separation bet
 └─────────────────────────────────────────────────────────────┘
 ```
 
-**Architecture Diagram:**
-
-![Architecture](art/architecture.png)
 
 ### Layer Responsibilities
 
