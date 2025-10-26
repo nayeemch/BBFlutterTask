@@ -12,8 +12,8 @@ A Flutter application built on a modern boilerplate architecture featuring **JWT
 - [Features](#-features)
 - [Architecture](#-architecture)
 - [Key Implementations](#-key-implementations)
-  - [JWT Authentication](#1-jwt-authentication-with-buddyboss)
-  - [WordPress Posts Fetching](#2-wordpress-posts-fetching)
+   - [JWT Authentication](#1-jwt-authentication-with-buddyboss)
+   - [WordPress Posts Fetching](#2-wordpress-posts-fetching)
 - [Project Structure](#-project-structure)
 - [Getting Started](#-getting-started)
 - [API Endpoints](#-api-endpoints)
@@ -90,18 +90,18 @@ Implemented secure JWT token-based authentication using the BuddyBoss API.
 // Endpoint: /wp-json/buddyboss-app/auth/v2/jwt/login
 POST request with form data:
 {
-  "username": "user@example.com",
-  "password": "password123"
+"username": "user@example.com",
+"password": "password123"
 }
 
 // Response:
-{
-  "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
-  "refresh_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
-  "user_display_name": "John Doe",
-  "user_nicename": "johndoe",
-  "user_email": "user@example.com",
-  "user_id": "2"
+        {
+"access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
+"refresh_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
+"user_display_name": "John Doe",
+"user_nicename": "johndoe",
+"user_email": "user@example.com",
+"user_id": "2"
 }
 ```
 
@@ -246,14 +246,14 @@ lib/
    ```bash
    flutter packages pub run build_runner build --delete-conflicting-outputs
    ```
-   
+
    Or use watch mode for continuous generation:
    ```bash
    flutter packages pub run build_runner watch
    ```
 
 4. **Configure API endpoint:**
-   
+
    Update the base URL in `lib/data/network/constants/endpoints.dart`:
    ```dart
    static const String baseUrl = "https://your-wordpress-site.com";
