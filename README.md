@@ -378,21 +378,11 @@ Add translations in `assets/lang/`:
 - `es.json` - Spanish
 - `da.json` - Danish
 
-## 🧪 Testing
-
-Run tests:
-```bash
-flutter test
-```
 
 ## 📱 Supported Platforms
 
 - ✅ Android
 - ✅ iOS
-- ✅ Web
-- ✅ Windows
-- ✅ macOS
-- ✅ Linux
 
 ## 🔐 Security Features
 
