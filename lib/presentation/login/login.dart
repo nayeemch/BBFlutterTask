@@ -113,18 +113,17 @@ class _LoginScreenState extends State<LoginScreen> {
               children: <Widget>[
                 Image.asset(
                   'assets/images/cat.gif',
-                  height: 200.0, // Adjust as needed
-                  width: 200.0, // Adjust as needed
-                  fit: BoxFit
-                      .contain, // Ensure the image fits within the dimensions
+                  height: 150.0,
+                  width: 200.0,
+                  fit: BoxFit.contain,
                   errorBuilder: (context, error, stackTrace) =>
                       Icon(Icons.error),
                 ),
-                SizedBox(height: 10.0),
+                SizedBox(height: 40.0),
                 _buildUserIdField(),
-                SizedBox(height: 5.0),
+                SizedBox(height: 15.0),
                 _buildPasswordField(),
-                SizedBox(height: 20.0),
+                SizedBox(height: 50.0),
                 _buildSignInButton()
               ],
             ),
@@ -180,10 +179,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _buildSignInButton() {
     return RoundedButtonWidget(
-      height: 40,
+      height: 50,
       buttonText: AppLocalizations.of(context).translate('login_btn_sign_in'),
       buttonColor: Colors.orangeAccent,
       textColor: Colors.white,
+      buttonTextSize: 15,
       onPressed: () async {
         if (_formStore.canLogin) {
           DeviceUtils.hideKeyboard(context);

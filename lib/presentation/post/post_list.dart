@@ -48,16 +48,36 @@ class _PostListScreenState extends State<PostListScreen> {
     );
   }
 
+  // Widget _buildListView() {
+  //   return _postStore.postList != null
+  //       ? ListView.separated(
+  //           itemCount: _postStore.postList!.posts!.length,
+  //           separatorBuilder: (context, position) {
+  //             return SizedBox();
+  //           },
+  //           itemBuilder: (context, position) {
+  //             return _buildListItem(position);
+  //           },
+  //         )
+  //       : Center(
+  //           child: Text(
+  //             AppLocalizations.of(context).translate('home_tv_no_post_found'),
+  //           ),
+  //         );
+  // }
+
   Widget _buildListView() {
     return _postStore.postList != null
-        ? ListView.separated(
-            itemCount: _postStore.postList!.posts!.length,
-            separatorBuilder: (context, position) {
-              return SizedBox();
+        ? RefreshIndicator(
+            onRefresh: () async {
+              await _postStore.refreshPosts();
             },
-            itemBuilder: (context, position) {
-              return _buildListItem(position);
-            },
+            child: ListView.separated(
+              physics: const AlwaysScrollableScrollPhysics(),
+              itemCount: _postStore.postList!.posts!.length,
+              separatorBuilder: (_, __) => const SizedBox(),
+              itemBuilder: (_, position) => _buildListItem(position),
+            ),
           )
         : Center(
             child: Text(
@@ -176,12 +196,14 @@ class _PostListScreenState extends State<PostListScreen> {
                         // Excerpt
                         Text(
                           _stripHtmlTags(post?.excerpt ?? post?.content ?? ''),
-                          maxLines: 2,
+                          textAlign: TextAlign.justify,
+                          maxLines: 3,
                           overflow: TextOverflow.ellipsis,
                           style:
-                              Theme.of(context).textTheme.bodySmall?.copyWith(
+                              Theme.of(context).textTheme.titleSmall?.copyWith(
                                     color: Colors.grey[700],
                                     height: 1.3,
+                                    fontSize: 13,
                                   ),
                         ),
                       ],

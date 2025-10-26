@@ -37,16 +37,25 @@ abstract class _PostStore with Store {
   @computed
   bool get loading => fetchPostsFuture.status == FutureStatus.pending;
 
-  // actions:-------------------------------------------------------------------
   @action
-  Future getPosts() async {
+  Future<void> getPosts() async {
     final future = _getPostUseCase.call(params: null);
     fetchPostsFuture = ObservableFuture(future);
 
     future.then((postList) {
+      // Randomize post order (optional)
+      postList?.posts?.shuffle();
+
       this.postList = postList;
     }).catchError((error) {
       errorStore.errorMessage = DioExceptionUtil.handleError(error);
     });
+  }
+
+  @action
+  Future<void> refreshPosts() async {
+    errorStore.errorMessage = '';
+    postList = null;
+    await getPosts();
   }
 }

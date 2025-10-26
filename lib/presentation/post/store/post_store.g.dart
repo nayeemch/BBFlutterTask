@@ -67,8 +67,16 @@ mixin _$PostStore on _PostStore, Store {
       AsyncAction('_PostStore.getPosts', context: context);
 
   @override
-  Future<dynamic> getPosts() {
+  Future<void> getPosts() {
     return _$getPostsAsyncAction.run(() => super.getPosts());
+  }
+
+  late final _$refreshPostsAsyncAction =
+      AsyncAction('_PostStore.refreshPosts', context: context);
+
+  @override
+  Future<void> refreshPosts() {
+    return _$refreshPostsAsyncAction.run(() => super.refreshPosts());
   }
 
   @override
