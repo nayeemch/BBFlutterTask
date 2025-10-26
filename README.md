@@ -308,11 +308,6 @@ https://st2-nayeem.hz2.developbb.dev
 ### Dependency Injection
 - **GetIt** - Service locator pattern
 
-### UI/UX
-- **Google Fonts** - Custom typography
-- **another_flushbar** - Elegant notifications
-- **Material Design** - UI components
-
 ### Utilities
 - **validators** - Form validation
 - **xxtea** - Encryption
