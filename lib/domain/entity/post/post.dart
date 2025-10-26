@@ -24,6 +24,7 @@ class Post {
   List<int>? tags;
   int? commentsCount;
   WpAuthor? authorDetails;
+  String? featuredImageUrl;
 
   // Legacy fields for backward compatibility
   int? userId;
@@ -53,6 +54,7 @@ class Post {
     this.tags,
     this.commentsCount,
     this.authorDetails,
+    this.featuredImageUrl,
     this.userId,
     this.body,
   });
@@ -97,6 +99,34 @@ class Post {
       }
     }
 
+    // Extract featured image URL from _embedded
+    String? featuredImageUrl;
+    if (json['_embedded'] != null &&
+        json['_embedded']['wp:featuredmedia'] != null) {
+      final mediaList = json['_embedded']['wp:featuredmedia'] as List;
+      if (mediaList.isNotEmpty) {
+        final media = mediaList[0] as Map<String, dynamic>;
+        // Try to get the source_url (full size image)
+        featuredImageUrl = media['source_url'] as String?;
+
+        // Fallback: try to get a medium or large size if available
+        if (featuredImageUrl == null && media['media_details'] != null) {
+          final mediaDetails = media['media_details'] as Map<String, dynamic>;
+          if (mediaDetails['sizes'] != null) {
+            final sizes = mediaDetails['sizes'] as Map<String, dynamic>;
+            // Try medium first, then large, then thumbnail
+            if (sizes['medium'] != null) {
+              featuredImageUrl = sizes['medium']['source_url'] as String?;
+            } else if (sizes['large'] != null) {
+              featuredImageUrl = sizes['large']['source_url'] as String?;
+            } else if (sizes['thumbnail'] != null) {
+              featuredImageUrl = sizes['thumbnail']['source_url'] as String?;
+            }
+          }
+        }
+      }
+    }
+
     return Post(
       id: json['id'],
       date: json['date'],
@@ -123,6 +153,7 @@ class Post {
       tags: json['tags'] != null ? List<int>.from(json['tags']) : null,
       commentsCount: json['comments_count'],
       authorDetails: authorDetails,
+      featuredImageUrl: featuredImageUrl,
       // Legacy compatibility
       userId: json['userId'] ?? json['author'],
       body: json['body'] ?? content,
@@ -152,6 +183,7 @@ class Post {
         'categories': categories,
         'tags': tags,
         'comments_count': commentsCount,
+        'featured_image_url': featuredImageUrl,
         // Legacy compatibility
         'userId': userId,
         'body': body,

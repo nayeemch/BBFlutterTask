@@ -70,59 +70,172 @@ class _PostListScreenState extends State<PostListScreen> {
     final post = _postStore.postList?.posts?[position];
     final authorName = post?.authorDetails?.name ?? 'Unknown Author';
     final authorAvatar = post?.authorDetails?.avatarUrls?['48'];
+    final featuredImageUrl = post?.featuredImageUrl;
 
     return Card(
-      elevation: 1,
+      elevation: 2,
       shadowColor: Colors.grey,
-      margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-      child: ListTile(
-        leading: authorAvatar != null
-            ? CircleAvatar(
-                backgroundImage: NetworkImage(authorAvatar),
-                onBackgroundImageError: (_, __) {},
-                // child: Icon(Icons.person),
-              )
-            : const CircleAvatar(
-                child: Icon(Icons.person),
-              ),
-        title: Text(
-          post?.title ?? 'No Title',
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-        ),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+      child: IntrinsicHeight(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const SizedBox(height: 4),
-            Text(
-              _stripHtmlTags(post?.excerpt ?? post?.content ?? ''),
-              maxLines: 5,
-              overflow: TextOverflow.ellipsis,
-            ),
-            const SizedBox(height: 4),
-            Row(
-              children: [
-                const Icon(Icons.person_outline, size: 14),
-                const SizedBox(width: 4),
-                Text(
-                  authorName,
-                  style: const TextStyle(fontSize: 14.0),
+            // Featured Image on the Left
+            if (featuredImageUrl != null && featuredImageUrl.isNotEmpty)
+              Container(
+                width: 120,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(4),
+                    bottomLeft: Radius.circular(4),
+                  ),
                 ),
-                const SizedBox(width: 12),
-                const Icon(Icons.access_time, size: 14),
-                const SizedBox(width: 4),
-                Text(
-                  _formatDate(post?.date ?? ''),
-                  style: const TextStyle(fontSize: 14.0),
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(4),
+                    bottomLeft: Radius.circular(4),
+                  ),
+                  child: Image.network(
+                    featuredImageUrl,
+                    fit: BoxFit.cover,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return Center(
+                        child: SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            value: loadingProgress.expectedTotalBytes != null
+                                ? loadingProgress.cumulativeBytesLoaded /
+                                    loadingProgress.expectedTotalBytes!
+                                : null,
+                          ),
+                        ),
+                      );
+                    },
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        color: Colors.grey[300],
+                        child: const Center(
+                          child: Icon(
+                            Icons.broken_image,
+                            size: 32,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
                 ),
-              ],
+              )
+            else
+              // Placeholder when no image
+              Container(
+                width: 120,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(4),
+                    bottomLeft: Radius.circular(4),
+                  ),
+                ),
+                child: const Center(
+                  child: Icon(
+                    Icons.image_not_supported,
+                    size: 40,
+                    color: Colors.grey,
+                  ),
+                ),
+              ),
+
+            // Content Section on the Right
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Title
+                        Text(
+                          post?.title ?? 'No Title',
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style:
+                              Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                        ),
+                        const SizedBox(height: 6),
+
+                        // Excerpt
+                        Text(
+                          _stripHtmlTags(post?.excerpt ?? post?.content ?? ''),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style:
+                              Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    color: Colors.grey[700],
+                                    height: 1.3,
+                                  ),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 8),
+
+                    // Author and Date Info
+                    Row(
+                      children: [
+                        // Author Avatar
+                        authorAvatar != null
+                            ? CircleAvatar(
+                                radius: 12,
+                                backgroundImage: NetworkImage(authorAvatar),
+                                onBackgroundImageError: (_, __) {},
+                              )
+                            : const CircleAvatar(
+                                radius: 12,
+                                child: Icon(Icons.person, size: 12),
+                              ),
+                        const SizedBox(width: 6),
+
+                        // Author Name
+                        Expanded(
+                          child: Text(
+                            authorName,
+                            style: const TextStyle(
+                              fontSize: 12.0,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+
+                        // Date
+                        const Icon(Icons.access_time,
+                            size: 12, color: Colors.grey),
+                        const SizedBox(width: 4),
+                        Text(
+                          _formatDate(post?.date ?? ''),
+                          style: TextStyle(
+                            fontSize: 11.0,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
             ),
           ],
         ),
-        isThreeLine: true,
       ),
     );
   }
